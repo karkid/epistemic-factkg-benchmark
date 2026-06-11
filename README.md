@@ -4,7 +4,7 @@
 
 A diagnosis-and-benchmark paper on measuring **source-trust reasoning** in fact verification.
 
-📄 **[Read the paper (PDF)](paper/paper.pdf)** &nbsp;·&nbsp; 🌐 **[Project website](https://sreedath.github.io/epistemic-factkg-benchmark/)**
+📄 **[Read the paper (PDF)](paper/paper.pdf)** &nbsp;·&nbsp; 🌐 **[Project website](https://aiswarya-nandakumar.github.io/epistemic-factkg-benchmark/)**
 
 ---
 
