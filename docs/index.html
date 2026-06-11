@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>When "Shortcut-Breaking" Splits Leak — Togo AI Labs</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;}
+  h1,h2,h3,.display{font-family:'Space Grotesk','Inter',sans-serif;}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+  .card{border:1px solid #e7e9ee;border-radius:16px;background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.04);}
+  .chip{border:1px solid #e7e9ee;border-radius:999px;}
+  .grad{background:radial-gradient(1200px 500px at 50% -10%,#eef2ff 0%,#ffffff 55%);}
+  a.btn{transition:.15s}
+  a.btn:hover{transform:translateY(-1px)}
+</style>
+</head>
+<body class="text-slate-800 bg-white antialiased">
+
+<!-- HERO -->
+<header class="grad border-b border-slate-100">
+  <div class="max-w-5xl mx-auto px-6 pt-16 pb-12">
+    <div class="flex justify-center gap-2 mb-5 text-xs font-medium">
+      <span class="chip px-3 py-1 text-indigo-700 bg-indigo-50">Fact Verification</span>
+      <span class="chip px-3 py-1 text-rose-700 bg-rose-50">Benchmark Leakage</span>
+      <span class="chip px-3 py-1 text-slate-600">Workshop preprint</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-700 text-center leading-tight text-slate-900">
+      When &ldquo;Shortcut-Breaking&rdquo; Splits Leak
+    </h1>
+    <p class="display text-center text-lg sm:text-xl mt-3 text-indigo-700 font-600">
+      A Source-Trust-Isolating Benchmark for Fact Verification
+    </p>
+    <p class="text-center mt-5 text-slate-600">
+      Dheeraj Karki &nbsp;·&nbsp; Aiswarya Konavoor
+    </p>
+    <p class="text-center text-sm text-slate-500">
+      Togo AI Labs &nbsp;·&nbsp; <a class="text-indigo-600 hover:underline" href="mailto:aiswarya@togolabs.ai">aiswarya@togolabs.ai</a>
+    </p>
+    <div class="flex flex-wrap justify-center gap-3 mt-7">
+      <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-600 text-sm" href="paper.pdf">📄 Paper (PDF)</a>
+      <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-600 text-sm" href="#benchmark">🧪 Benchmark</a>
+      <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-600 text-sm" href="#inversion">📊 The Inversion</a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6">
+
+  <!-- HEADLINE STATS -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 -mt-6 mb-14">
+    <div class="card p-6 text-center">
+      <div class="text-3xl font-800 text-rose-600 display">0.99</div>
+      <p class="text-sm text-slate-600 mt-1">a single template field predicts the verdict on the original &ldquo;shortcut-breaking&rdquo; split</p>
+    </div>
+    <div class="card p-6 text-center">
+      <div class="text-3xl font-800 text-rose-600 display">0.996</div>
+      <p class="text-sm text-slate-600 mt-1">accuracy of a <b>trust-blind</b> model on the leaky split &mdash; it <b>wins</b></p>
+    </div>
+    <div class="card p-6 text-center">
+      <div class="text-3xl font-800 text-indigo-600 display">0.44 &rarr; 0.77</div>
+      <p class="text-sm text-slate-600 mt-1">macro-F1, trust-blind &rarr; trust-aware, once the split stops leaking</p>
+    </div>
+  </section>
+
+  <!-- IN A NUTSHELL -->
+  <section class="mb-14">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">In a nutshell</h2>
+    <div class="card p-6 text-[15px] leading-relaxed text-slate-700">
+      Fact-checking models often cheat: they reach high accuracy by reading surface patterns rather than reasoning about evidence.
+      A sensible fix is to weight evidence by how trustworthy its <i>source</i> is. But to claim a model actually uses source trust,
+      you need a test that only a trust-using model can pass. We show that the obvious way to build such a test &mdash; pairing the
+      same claim with a high-trust and a low-trust source &mdash; <b>secretly leaks the answer</b>: the low-trust evidence was written
+      in a different style, so a model can read the style instead of the source. After fixing the leak, the result flips: a model that
+      ignores source trust drops to chance, while a trust-aware model wins. The lesson is about measurement, not just models &mdash;
+      and it took two attempts to get the benchmark right.
+    </div>
+  </section>
+
+  <!-- DIAGNOSIS -->
+  <section class="mb-14">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">The original evaluation does not measure source trust</h2>
+    <p class="text-slate-600 mb-5">Three reported successes each collapse under inspection.</p>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="card p-5">
+        <div class="text-xs font-600 text-rose-600 uppercase tracking-wide">Synthetic split</div>
+        <p class="text-sm text-slate-700 mt-2">Low-trust evidence uses a rumour register (&ldquo;an anonymous post claimed&hellip;&rdquo;), high-trust uses an official one. So <b>text style = verdict</b>. A trust-blind model scores <b>0.996</b>; the template field predicts the label at <b>0.99</b>.</p>
+      </div>
+      <div class="card p-5">
+        <div class="text-xs font-600 text-rose-600 uppercase tracking-wide">AVeriTeC accuracy</div>
+        <p class="text-sm text-slate-700 mt-2">The set is ~66% &ldquo;refuted&rdquo;. Reported accuracy <b>0.665</b> is the majority-class prior; its <b>macro-F1 is 0.265</b>. A real classifier collapses to the majority class (predicts NEI 1 / 462 times).</p>
+      </div>
+      <div class="card p-5">
+        <div class="text-xs font-600 text-rose-600 uppercase tracking-wide">Simulation split</div>
+        <p class="text-sm text-slate-700 mt-2">Constant trust and weight, balanced labels, closed-world numeric match &rarr; accuracy <b>1.000</b>. The epistemic formula contributes nothing; it only inflates the average.</p>
+      </div>
+    </div>
+    <figure class="card p-5 mt-6">
+      <img src="figures/fig_leakage.png" alt="Per-feature leakage" class="w-full max-w-2xl mx-auto"/>
+      <figcaption class="text-sm text-slate-500 mt-3 text-center">On the original split a non-trust feature predicts the verdict; on the corrected split every non-trust feature sits at chance.</figcaption>
+    </figure>
+  </section>
+
+  <!-- BENCHMARK -->
+  <section id="benchmark" class="mb-14 scroll-mt-6">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">A trust-isolating benchmark</h2>
+    <p class="text-slate-600 mb-5">We rebuild the test so source trust is the <i>only</i> feature that can determine the label.</p>
+    <figure class="card p-5 mb-6">
+      <img src="figures/fig_construction.png" alt="Benchmark construction" class="w-full max-w-2xl mx-auto"/>
+      <figcaption class="text-sm text-slate-500 mt-3 text-center">The same evidence text is attached to a high-trust and a low-trust source of the same category; only the trust scalar differs.</figcaption>
+    </figure>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="card p-5">
+        <div class="text-xs font-600 text-indigo-600 uppercase tracking-wide">Design</div>
+        <ul class="text-sm text-slate-700 mt-2 space-y-1.5 list-disc list-inside">
+          <li>Evidence text <b>byte-identical</b> across trust tiers, neutral register.</li>
+          <li>Source <b>category held constant</b> (so the category feature carries no signal).</li>
+          <li><b>Trust values held out</b> at test, so the model must use trust as a continuous signal.</li>
+        </ul>
+      </div>
+      <div class="card p-5">
+        <div class="text-xs font-600 text-indigo-600 uppercase tracking-wide">The lesson (it took two tries)</div>
+        <p class="text-sm text-slate-700 mt-2">Text isolation alone was <b>not enough</b>: a first version still let a trust-blind model reach <b>0.82</b> macro-F1 by using source <i>category</i> as a trust proxy. Isolating a feature means controlling its proxies too. Verification: 747/747 texts appear with more than one label; every non-trust feature predicts at chance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVERSION -->
+  <section id="inversion" class="mb-14 scroll-mt-6">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">The inversion</h2>
+    <p class="text-slate-600 mb-5">Source trust helps <i>only</i> once the split stops leaking. The same signal flips from winning to losing.</p>
+    <figure class="card p-5 mb-6">
+      <img src="figures/fig_inversion.png" alt="The inversion" class="w-full max-w-3xl mx-auto"/>
+    </figure>
+    <div class="card overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
+          <tr><th class="text-left px-5 py-3">Setting</th><th class="px-5 py-3">Metric</th><th class="px-5 py-3">Trust-blind</th><th class="px-5 py-3">Trust-aware</th></tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr><td class="px-5 py-3 text-slate-700">Original split (leaky)</td><td class="px-5 py-3 text-center text-slate-500">accuracy</td><td class="px-5 py-3 text-center font-700 text-rose-600">0.996</td><td class="px-5 py-3 text-center text-slate-700">0.889</td></tr>
+          <tr><td class="px-5 py-3 text-slate-700">Corrected &mdash; controlled probe</td><td class="px-5 py-3 text-center text-slate-500">macro-F1</td><td class="px-5 py-3 text-center text-slate-700">0.447</td><td class="px-5 py-3 text-center font-700 text-indigo-600">1.000</td></tr>
+          <tr><td class="px-5 py-3 text-slate-700">Corrected &mdash; real graph network</td><td class="px-5 py-3 text-center text-slate-500">macro-F1</td><td class="px-5 py-3 text-center text-slate-700">0.444</td><td class="px-5 py-3 text-center font-700 text-indigo-600">0.772</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-sm text-slate-500 mt-3">On the leaky split a trust-blind model wins; on the corrected split it collapses to chance while a trust-aware model wins, with both a controlled probe and the original graph network.</p>
+  </section>
+
+  <!-- LIMITATIONS -->
+  <section class="mb-14">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">Honest limitations</h2>
+    <div class="card p-6 text-[15px] leading-relaxed text-slate-700">
+      The corrected benchmark is a <b>controlled instrument</b>: single-evidence, single evidence-type, fictional-claim, single-category by design, so it measures trust sensitivity, not open-web realism. The trust-aware probe score of 1.000 reflects a label that is a deterministic function of trust on this split; the content is the <b>contrast</b> with the trust-blind 0.447, not the absolute number. Results are a single run (multiple seeds belong in a camera-ready). The orthogonal evidence-type axis is held fixed here and remains untested &mdash; an analogous evidence-type-isolating benchmark is the natural next step.
+    </div>
+  </section>
+
+  <!-- BIBTEX -->
+  <section class="mb-16">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">Cite</h2>
+    <pre class="mono text-xs bg-slate-900 text-slate-100 rounded-xl p-5 overflow-x-auto">@misc{karki2026shortcut,
+  title  = {When "Shortcut-Breaking" Splits Leak: A Source-Trust-Isolating
+            Benchmark for Fact Verification},
+  author = {Karki, Dheeraj and Konavoor, Aiswarya},
+  year   = {2026},
+  note   = {Togo AI Labs}
+}</pre>
+  </section>
+</main>
+
+<footer class="border-t border-slate-100 py-8">
+  <p class="text-center text-sm text-slate-400">Togo AI Labs &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; <a href="mailto:aiswarya@togolabs.ai" class="hover:underline">aiswarya@togolabs.ai</a></p>
+</footer>
+
+</body>
+</html>

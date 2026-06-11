@@ -1,0 +1,202 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{url}
+\graphicspath{{figures/output/}}
+\definecolor{pendingcolor}{RGB}{200, 100, 50}
+\newcommand{\pending}[1]{\textcolor{pendingcolor}{\textit{[#1]}}}
+
+\begin{document}
+
+\title{When ``Shortcut-Breaking'' Splits Leak: A Source-Trust-Isolating Benchmark for Fact Verification}
+
+\author{
+\IEEEauthorblockN{Dheeraj Karki and Aiswarya Konavoor}
+\IEEEauthorblockA{Togo AI Labs\\
+Email: aiswarya@togolabs.ai}
+}
+
+\maketitle
+
+\begin{abstract}
+Fact verification (FV) models are known to exploit shortcuts such as claim-only lexical bias, and a natural remedy is to weight evidence by the trustworthiness of its source. We study how such source-trust reasoning is measured, and report three problems in a representative source-trust FV system. First, its synthetic ``shortcut-breaking'' split, intended to require source trust, is solved at 0.996 accuracy by a trust-\emph{blind} model, because low-trust evidence is drawn from a different textual register (writing style) than high-trust evidence: a single template field predicts the verdict at 0.99, so text style alone is sufficient. Second, its reported AVeriTeC accuracy of 0.665 equals the majority-class prior (macro-F1 0.265). Third, its simulation split reaches accuracy 1.000 through closed-world triviality. We then construct a trust-isolating benchmark that admits no detectable non-trust path to the label, by holding the evidence text byte-identical across trust tiers, holding the source category constant, and holding out trust values at test time. The result is a sharp inversion: a trust-blind model that \emph{won} on the leaky split collapses to chance (graph-network macro-F1 0.444), while a trust-aware model wins (macro-F1 0.772 with the original graph network, and 1.000 with a controlled linear probe, an isolation check rather than a capability claim). We release the benchmark and its generator at \url{https://github.com/sreedath/epistemic-factkg-benchmark}.
+\end{abstract}
+
+\begin{IEEEkeywords}
+fact verification, source credibility, shortcut learning, dataset leakage, benchmark design, graph neural networks
+\end{IEEEkeywords}
+
+\section{Introduction}
+Automated fact verification predicts whether a claim is supported, refuted, or unverifiable given retrieved evidence. A persistent failure mode is shortcut learning: models reach high accuracy by exploiting surface regularities rather than reasoning over evidence. The best known case is claim-only bias in FEVER, where a classifier that never reads the evidence nearly matches an evidence-aware model~\cite{schuster2019debias}. A natural and well-motivated direction is to make verification \emph{source-aware}: identical text from a peer-reviewed article and from an anonymous post should not be treated identically, so evidence should be weighted by the trustworthiness of its source~\cite{popat2018declare,baly2018factuality}.
+
+This paper is about how that idea is \emph{measured}. To claim that a model uses source trust, one needs an evaluation that only a trust-using model can solve. The intuitive construction pairs the same claim with a high-trust and a low-trust source and labels the low-trust version not-enough-evidence. We show that a careful instance of this construction silently leaks the verdict, that the leakage makes a trust-blind model appear to succeed, and that a second common reporting choice, accuracy on a class-imbalanced benchmark, hides a majority-class predictor. We then show how to build an evaluation that does isolate source trust, and what changes when it is used.
+
+Our study object is a representative source-trust FV system that computes a per-evidence epistemic confidence from source trust, an evidence-type weight, and an inference strength, and aggregates these into a verdict through a heterogeneous graph neural network with a symbolic and a neural decision layer. We audit its evaluation, find it does not measure what it claims, and rebuild the measurement. Fig.~\ref{fig:construction} summarizes the corrected benchmark.
+
+\textbf{Contributions.}
+\begin{enumerate}
+\item \textbf{A leakage diagnosis.} We show that a synthetic ``shortcut-breaking'' trust split leaks the verdict through textual register (a template field predicts it at 0.99 and a trust-blind model scores 0.996), that reporting AVeriTeC accuracy of 0.665 masks the majority-class prior (macro-F1 0.265), and that the simulation split is closed-world trivial (Section~\ref{sec:diagnosis}).
+\item \textbf{A trust-isolating benchmark.} We construct a split that admits no detectable non-trust path to the label, and report the lesson that text isolation alone is insufficient: a first version still leaked at macro-F1 0.82 through the source-category proxy until the category was neutralized (Section~\ref{sec:benchmark}).
+\item \textbf{The inversion.} On the corrected benchmark a trust-blind model is at chance and a trust-aware model wins, the opposite of the leaky split, confirmed with both a controlled probe and the original graph network (Section~\ref{sec:experiments}).
+\end{enumerate}
+We release the benchmark generator and data so the construction can be inspected and extended.
+
+\section{Background and Related Work}
+\textbf{Fact-verification benchmarks.} FEVER introduced large-scale claim verification over Wikipedia with three verdict classes~\cite{thorne2018fever}. AVeriTeC moved to real-world claims with web evidence and four verdict classes, and is heavily skewed toward the refuted class~\cite{schlichtkrull2023averitec}. AVeriTeC distinguishes plain verdict accuracy from an evidence-gated score; we use it only as a verdict-accuracy testbed and report macro-F1 against the majority baseline, because the class skew makes accuracy alone uninformative.
+
+\textbf{Shortcuts and robustness in FV.} Claim-only bias was documented for FEVER together with a symmetric evaluation set~\cite{schuster2019debias}. VitaminC built contrastive evidence pairs that force a model to read the evidence rather than the claim~\cite{schuster2021vitaminc}. These works target lexical and evidence-content shortcuts. The shortcut we study is different: a model can recover the verdict from the \emph{register} of the evidence text, which is correlated with source trust by construction. Our corrected benchmark is the source-trust analogue of a contrastive split.
+
+\textbf{Source-credibility verification.} DeClarE weighted evidence with a learned source-trustworthiness representation for claim credibility~\cite{popat2018declare}. Source factuality has been predicted at the outlet level from multiple signals~\cite{baly2018factuality}. These supply or use a trust signal but do not provide a measurement that isolates it; our contribution is the isolating evaluation.
+
+\textbf{Graph and symbolic FV.} Evidence aggregation over graphs is a standard FV backbone, from GEAR~\cite{zhou2019gear} and the kernel graph attention network~\cite{liu2020kgat} to stance-aware aggregation~\cite{si2021tarsa} and heterogeneous-graph reasoning over text and tables~\cite{gong2024heterfc}. Rule-based aggregation over per-evidence entailment has also been used for grounding checks~\cite{sansford2024grapheval}, and logic-regularized models give interpretable, auditable verdicts~\cite{chen2022loren}. The system we audit sits in this family; our focus is its evaluation, not its architecture. Epistemology-grounded reasoning in language models is nascent and, to date, targets general deduction rather than fact verification~\cite{sathish2026pramana}.
+
+\section{The System Under Study}
+\label{sec:system}
+The audited system is our own earlier implementation, Epistemic FactKG (system code at \url{https://github.com/karkid/epistemic-factkg}); its leaky-split, AVeriTeC, and simulation numbers (the ``before'' column of Table~\ref{tab:inversion} and the upper rows of Table~\ref{tab:diagnosis}) are taken from that implementation's evaluation logs, with the corrected benchmark released at the repository above. The system assigns each evidence item an epistemic confidence
+\begin{equation}
+\mathrm{EC}_i = 1 - (1 - \mathrm{ST}_i)^{\,\mathrm{EW}_i \cdot \mathrm{IS}_i},
+\label{eq:ec}
+\end{equation}
+where $\mathrm{ST}_i \in [0,1]$ is a registry source-trust score, $\mathrm{EW}_i$ is an evidence-type weight, and $\mathrm{IS}_i$ is an inference strength. Per-claim evidence is encoded by a heterogeneous graph network (graph attention over claim and evidence nodes) with stance and inference-strength heads, and the verdict is produced either by a symbolic threshold on the aggregated $\mathrm{EC}$ or by a learned verdict head. For this study the relevant property of Eq.~\eqref{eq:ec} is monotonicity in $\mathrm{ST}$: with evidence type and inference strength fixed, raising source trust raises confidence. A model that ignores $\mathrm{ST}$ has no access to this signal. The evidence-type weight $\mathrm{EW}$ is an orthogonal axis that our source-trust benchmark deliberately holds fixed; we return to it in Section~\ref{sec:limitations}.
+
+\section{Diagnosis: the original evaluation does not measure source trust}
+\label{sec:diagnosis}
+We evaluate three claims in the original setup and find each undermined by its own data. Table~\ref{tab:diagnosis} collects the numbers.
+
+\textbf{The synthetic split leaks through text register.} The synthetic ``shortcut-breaking'' split pairs claims with high- and low-trust sources and labels low-trust supporting text as not-enough-evidence, so that, in principle, only source trust can separate the pair. In practice the generator draws low-trust evidence from a rumour register (for example, ``An anonymous post claimed that\dots'') and high-trust evidence from an official register (``published findings confirming\dots''). Because the register is determined by the trust tier and the trust tier determines the verdict, the text register determines the verdict. A single-feature lookup confirms this: a per-record template field predicts the verdict at 0.99, the source identifier at 0.82, and the raw evidence text and its stance at 0.99 and 0.54 respectively (Table~\ref{tab:diagnosis}, Fig.~\ref{fig:leakage}). Consequently a trust-blind model that reads only the text reaches 0.996 accuracy on this split, and the trust-aware model scores lower (0.889), because the leaky split rewards reading the register rather than reasoning about the source.
+
+\textbf{AVeriTeC accuracy hides the class prior.} The AVeriTeC subset is heavily imbalanced. On the three-class development set, always predicting the majority class (refuted) yields accuracy 0.660 and macro-F1 0.265. A standard text classifier collapses onto the majority class, predicting the not-enough-evidence class exactly once out of 462 examples, for accuracy 0.656 and macro-F1 0.354. The reported system accuracy of 0.665 lies on this prior; without macro-F1 it cannot be distinguished from a majority predictor.
+
+\textbf{The simulation split is closed-world trivial.} On the simulation split, every evidence item has the same maximal source trust and evidence-type weight, so Eq.~\eqref{eq:ec} carries no discriminative signal, and the verdict is recoverable by matching a numeric value against simulator ground truth. Accuracy is 1.000, which reflects task triviality rather than epistemic reasoning, and inflates any average that includes it.
+
+\begin{table}[t]
+\caption{Diagnosis of the original evaluation. Each row reports a number that undercuts a source-trust claim. Lookup values are the fraction of verdicts recovered from a single non-trust feature.}
+\label{tab:diagnosis}
+\centering
+\begin{tabular}{@{}llr@{}}
+\toprule
+Finding & Measure & Value \\
+\midrule
+Synthetic: template field & verdict lookup & 0.99 \\
+Synthetic: source id & verdict lookup & 0.82 \\
+Synthetic: trust-blind model & accuracy $\uparrow$ & 0.996 \\
+AVeriTeC: majority baseline & accuracy / macro-F1 & 0.660 / 0.265 \\
+AVeriTeC: text classifier & accuracy / macro-F1 & 0.656 / 0.354 \\
+Simulation split & accuracy $\uparrow$ & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{A Trust-Isolating Benchmark}
+\label{sec:benchmark}
+We rebuild the evaluation so that source trust is the only feature that determines the label. Fig.~\ref{fig:construction} shows the construction.
+
+\textbf{Design.} For each claim we generate one neutral evidence sentence and attach it, byte-for-byte identical, to a high-trust and a low-trust source. The verdict is derived from the system's own confidence rule, Eq.~\eqref{eq:ec}: with a single testimony item, high trust ($\mathrm{ST}\geq 0.85$) yields supported or refuted, and low trust ($\mathrm{ST}\leq 0.45$) yields not-enough-evidence. The text is therefore constant within each high/low pair, and only the source-trust scalar flips the label. The benchmark has 2080 records, 1600 for training and 480 held out for test.
+
+\textbf{Text isolation is necessary but not sufficient.} A first version of the benchmark held the text identical across tiers but allowed sources of different categories. It looked clean under single-feature checks, yet a trust-blind model still reached macro-F1 0.82 on the held-out test. The reason is an interaction the single-feature checks missed: the model reads the 6-dimensional source-category feature, category is correlated with trust, and so it transfers to most held-out sources; combined with a ``supporting text implies supported'' default, it recovers the label without using the trust scalar. We therefore hold the source \emph{category} constant (a single category for all records) and vary only the continuous trust scalar, with held-out trust values at test so that a trust-using model must treat trust as a continuous signal rather than memorize values. This is itself a lesson: isolating a feature requires controlling its proxies, not only the feature.
+
+\textbf{Verification.} The corrected benchmark admits no non-trust path to the label. Every distinct evidence text appears with more than one gold label (747 of 747), and every non-trust feature predicts the verdict at chance (Table~\ref{tab:isolation}). Fig.~\ref{fig:leakage} contrasts the per-feature leakage of the original and corrected splits.
+
+\begin{table}[t]
+\caption{Trust-isolation verification on the corrected benchmark. A non-leaking feature predicts the verdict at the chance rate (0.50 for the high/low decision). Source trust is the only predictive signal, and it is held out by value at test.}
+\label{tab:isolation}
+\centering
+\begin{tabular}{@{}lr@{}}
+\toprule
+Feature & verdict predictable \\
+\midrule
+evidence text (full) & 0.50 \\
+evidence text (prefix) & 0.50 \\
+stance & 0.50 \\
+source category & 0.50 (constant) \\
+source-trust scalar & predictive (held out at test) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{pb_construction.png}
+\caption{The trust-isolating benchmark. The same evidence text is attached to a high-trust and a low-trust source of the same category; only the source-trust scalar differs, so text and category carry no label signal and only a trust-using model can separate the pair.}
+\label{fig:construction}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{pb_leakage.png}
+\caption{Verdict recoverable from a single non-trust feature. On the original split the template field, source identifier, evidence text, and stance all leak the verdict (0.99, 0.82, 0.99, 0.54); on the corrected split every non-trust feature sits at chance (0.50).}
+\label{fig:leakage}
+\end{figure}
+
+\section{Experiments: The Inversion}
+\label{sec:experiments}
+We evaluate trust-blind and trust-aware models on the corrected benchmark, with the majority and all-not-enough-evidence baselines, and macro-F1 as the primary metric because of the class balance by construction. The text embedding is all-MiniLM-L6-v2 (384 dimensions); the trust-blind baseline and the trust-aware model are the audited system's own heterogeneous graph attention network, the latter with the epistemic-confidence layer that reads source trust. The benchmark generator is seeded for exact reproduction.
+
+\textbf{Controlled probe.} To isolate feature access from model capacity, we train a logistic-regression probe on the same features the trust-blind graph network sees (a sentence embedding of the evidence text and a source-category indicator), and compare it to the same probe with the source-trust scalar added. On the held-out-trust test set, the trust-blind probe reaches macro-F1 0.447, at chance, while the trust-aware probe reaches 1.000. The perfect score is not a capability claim: it shows that the trust scalar is necessary and sufficient on this benchmark, which is exactly the isolation property we sought.
+
+\textbf{Original graph network.} We then train the system's own models. The trust-blind baseline (a heterogeneous graph network with a verdict head, with no access to the trust scalar) plateaus at verdict accuracy near 0.50 in training and reaches macro-F1 0.444 on the held-out test, at chance. The trust-aware model (the same backbone with the epistemic-confidence layer, which reads source trust) reaches macro-F1 0.772. The gap of 0.328 macro-F1 is produced solely by access to source trust. The trust-aware model does not reach the probe's perfect score, because its threshold-and-fallback decision generalizes imperfectly to unseen trust values; we report this rather than tune it away.
+
+\textbf{The inversion.} Table~\ref{tab:inversion} and Fig.~\ref{fig:inversion} place the results beside the original leaky split. On the leaky split the trust-blind model wins (0.996 versus 0.889 accuracy), because the split rewards reading the register. On the corrected split the trust-blind model collapses to chance and the trust-aware model wins. The trust signal helps only once the evaluation stops leaking. This inversion is the central result: it shows both that the original evaluation measured the wrong thing and that, measured correctly, source trust does carry the claimed effect.
+
+\begin{table}[t]
+\caption{The inversion. Trust-blind versus trust-aware models on the leaky split (accuracy) and the corrected split (macro-F1). Best result in each setting in bold. Trust-blind wins on the leaky split and collapses to chance on the corrected one.}
+\label{tab:inversion}
+\centering
+\begin{tabular}{@{}llcc@{}}
+\toprule
+Setting & Metric & Trust-blind & Trust-aware \\
+\midrule
+Original split (leaky) & accuracy $\uparrow$ & \textbf{0.996} & 0.889 \\
+Corrected, controlled probe & macro-F1 $\uparrow$ & 0.447 & \textbf{1.000} \\
+Corrected, graph network & macro-F1 $\uparrow$ & 0.444 & \textbf{0.772} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{pb_inversion.png}
+\caption{The inversion. On the original leaky split a trust-blind model wins on accuracy; on the corrected split it collapses to chance (macro-F1) while a trust-aware model wins, with both the controlled probe and the original graph network.}
+\label{fig:inversion}
+\end{figure}
+
+\section{Limitations and Future Work}
+\label{sec:limitations}
+The corrected benchmark is a controlled instrument. It is single-evidence, single evidence-type, fictional-claim, and single-category by design, precisely so that source trust is the only signal; it therefore measures trust sensitivity rather than open-web realism, and the realism axis is better carried by benchmarks such as AVeriTeC reported with macro-F1 and a majority baseline. The trust-aware probe score of 1.000 reflects a label that is a deterministic function of source trust on this split; the scientific content is the contrast with the trust-blind 0.447, not the absolute value. Our experiments use a single training run; multiple seeds with significance tests should be added for a camera-ready comparison. Finally, the evidence-type weight $\mathrm{EW}$ in Eq.~\eqref{eq:ec}, the axis that the system grounds in an evidence-type taxonomy, is held constant here and is therefore untested; an analogous evidence-type-isolating benchmark, holding source trust fixed while varying evidence type, is the natural next step and would determine whether that taxonomy is load-bearing.
+
+\section{Conclusion}
+Source-trust reasoning in fact verification must be measured on evaluations that demonstrably require source trust. We showed that a natural ``shortcut-breaking'' construction leaks the verdict through textual register, that accuracy on a skewed benchmark hides the majority-class prior, and that controlling a feature requires controlling its proxies as well. We released a trust-isolating benchmark and reported an inversion: a trust-blind model wins on the leaky split and is at chance on the corrected one, while a trust-aware model wins only when the evaluation no longer leaks. The same method should be applied to the orthogonal evidence-type axis before the broader epistemic framing can be claimed.
+
+\section*{Acknowledgments}
+The authors thank Togo AI Labs for mentorship and computational resources for this research.
+
+\begin{thebibliography}{99}
+\bibitem{schuster2019debias} T. Schuster \textit{et al.}, ``Towards debiasing fact verification models,'' in \textit{EMNLP-IJCNLP}, 2019.
+\bibitem{popat2018declare} K. Popat \textit{et al.}, ``DeClarE: Debunking fake news and false claims using evidence-aware deep learning,'' in \textit{EMNLP}, 2018.
+\bibitem{baly2018factuality} R. Baly \textit{et al.}, ``Predicting factuality of reporting and bias of news media sources,'' in \textit{EMNLP}, 2018.
+\bibitem{thorne2018fever} J. Thorne \textit{et al.}, ``FEVER: A large-scale dataset for fact extraction and verification,'' in \textit{NAACL}, 2018.
+\bibitem{schlichtkrull2023averitec} M. Schlichtkrull, Z. Guo, and A. Vlachos, ``AVeriTeC: A dataset for real-world claim verification with evidence from the web,'' in \textit{NeurIPS Datasets and Benchmarks}, 2023.
+\bibitem{schuster2021vitaminc} T. Schuster, A. Fisch, and R. Barzilay, ``Get your vitamin C! Robust fact verification with contrastive evidence,'' in \textit{NAACL}, 2021.
+\bibitem{zhou2019gear} J. Zhou \textit{et al.}, ``GEAR: Graph-based evidence aggregating and reasoning for fact verification,'' in \textit{ACL}, 2019.
+\bibitem{liu2020kgat} Z. Liu \textit{et al.}, ``Fine-grained fact verification with kernel graph attention network,'' in \textit{ACL}, 2020.
+\bibitem{si2021tarsa} J. Si \textit{et al.}, ``Topic-aware evidence reasoning and stance-aware aggregation for fact verification,'' in \textit{ACL}, 2021.
+\bibitem{gong2024heterfc} H. Gong \textit{et al.}, ``Heterogeneous graph reasoning for fact checking over texts and tables,'' in \textit{AAAI}, 2024.
+\bibitem{sansford2024grapheval} H. Sansford \textit{et al.}, ``GraphEval: A knowledge-graph based LLM hallucination evaluation framework,'' in \textit{KiL Workshop at KDD}, 2024.
+\bibitem{chen2022loren} J. Chen \textit{et al.}, ``LOREN: Logic-regularized reasoning for interpretable fact verification,'' in \textit{AAAI}, 2022.
+\bibitem{he2021deberta} P. He, J. Gao, and W. Chen, ``DeBERTaV3: Improving DeBERTa using ELECTRA-style pre-training with gradient-disentangled embedding sharing,'' \textit{arXiv:2111.09543}, 2021.
+\bibitem{reimers2019sbert} N. Reimers and I. Gurevych, ``Sentence-BERT: Sentence embeddings using Siamese BERT-networks,'' in \textit{EMNLP-IJCNLP}, 2019.
+\bibitem{velickovic2018gat} P. Veli\v{c}kovi\'{c} \textit{et al.}, ``Graph attention networks,'' in \textit{ICLR}, 2018.
+\bibitem{schlichtkrull2018rgcn} M. Schlichtkrull \textit{et al.}, ``Modeling relational data with graph convolutional networks,'' in \textit{ESWC}, 2018.
+\bibitem{williams2018mnli} A. Williams, N. Nangia, and S. Bowman, ``A broad-coverage challenge corpus for sentence understanding through inference,'' in \textit{NAACL}, 2018.
+\bibitem{sathish2026pramana} K. Sathish, ``Pramana: Fine-tuning LLMs for epistemic reasoning through Navya-Nyaya,'' \textit{arXiv:2604.04937}, 2026.
+\end{thebibliography}
+
+\end{document}
