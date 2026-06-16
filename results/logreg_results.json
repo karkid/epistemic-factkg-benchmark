@@ -1,0 +1,74 @@
+{
+  "benchmark_version": "expanded_v3",
+  "split_file": "/Users/Frido/Workspace/Projects/github/epistemic-factkg/temp/data/expanded_split.jsonl",
+  "n_train": 1600,
+  "n_test_total": 600,
+  "n_test_standard": 480,
+  "n_test_mid_tier": 120,
+  "baselines": {
+    "majority": {
+      "label": "not_enough_evidence",
+      "accuracy": 0.6,
+      "macro_f1": 0.25
+    },
+    "always_nee": {
+      "accuracy": 0.6,
+      "macro_f1": 0.25
+    }
+  },
+  "trust_blind": {
+    "all": {
+      "accuracy": 0.405,
+      "macro_f1": 0.3889,
+      "per_class_f1": {
+        "not_enough_evidence": 0.022,
+        "refuted": 0.576,
+        "supported": 0.569
+      }
+    },
+    "standard": {
+      "accuracy": 0.5,
+      "macro_f1": 0.4466,
+      "per_class_f1": {
+        "not_enough_evidence": 0.008,
+        "refuted": 0.667,
+        "supported": 0.665
+      }
+    },
+    "mid_tier": {
+      "accuracy": 0.025,
+      "macro_f1": 0.0163,
+      "per_class_f1": {
+        "not_enough_evidence": 0.049
+      }
+    }
+  },
+  "trust_aware": {
+    "all": {
+      "accuracy": 0.8867,
+      "macro_f1": 0.8817,
+      "per_class_f1": {
+        "not_enough_evidence": 0.897,
+        "refuted": 0.87,
+        "supported": 0.878
+      }
+    },
+    "standard": {
+      "accuracy": 0.9979,
+      "macro_f1": 0.9972,
+      "per_class_f1": {
+        "not_enough_evidence": 1.0,
+        "refuted": 0.996,
+        "supported": 0.996
+      }
+    },
+    "mid_tier": {
+      "accuracy": 0.4417,
+      "macro_f1": 0.2042,
+      "per_class_f1": {
+        "not_enough_evidence": 0.613
+      }
+    }
+  },
+  "delta_macro_f1": 0.4928
+}
