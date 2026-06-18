@@ -23,14 +23,14 @@ import argparse, json, subprocess
 from pathlib import Path
 
 GITHUB_URL   = "https://github.com/karkid/epistemic-factkg"
-REVIEW_DIR   = Path(__file__).resolve().parents[1]   # review/12062026/
-MODEL_REPO   = REVIEW_DIR / "model_repo"             # cloned here if local not found
-SPLIT_JSONL  = REVIEW_DIR / "data" / "expanded_split.jsonl"
-REGISTRY_OUT = REVIEW_DIR / "data" / "registry_with_nm.jsonl"
-SPLITS_DIR   = REVIEW_DIR / "data" / "splits"
-EMBED_CACHE  = REVIEW_DIR / "data" / "embed_cache.pkl"
-RESULTS_OUT  = REVIEW_DIR / "results" / "gnn_results.jsonl"
-RUNS_DIR     = REVIEW_DIR / "runs"
+ROOT   = Path(__file__).resolve().parents[1]   # review/12062026/
+MODEL_REPO   = ROOT / "model_repo"             # cloned here if local not found
+SPLIT_JSONL  = ROOT / "data" / "expanded_split.jsonl"
+REGISTRY_OUT = ROOT / "data" / "registry_with_nm.jsonl"
+SPLITS_DIR   = ROOT / "data" / "splits"
+EMBED_CACHE  = ROOT / "data" / "embed_cache.pkl"
+RESULTS_OUT  = ROOT / "results" / "gnn_results.jsonl"
+RUNS_DIR     = ROOT / "runs"
 
 NM_ENTRIES = [
     {"source_id": "nm_h85a", "source_trust": 0.85, "prior_trust": 0.85},
