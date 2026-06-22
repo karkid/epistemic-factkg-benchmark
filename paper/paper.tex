@@ -249,9 +249,6 @@ The corrected benchmark is a controlled instrument: single-evidence, single evid
 \section{Conclusion}
 Source-trust reasoning in fact verification must be measured on evaluations that demonstrably require source trust. We showed that a natural ``shortcut-breaking'' construction leaks the verdict through textual register, that accuracy on a skewed benchmark hides the majority-class prior, and that controlling a feature requires controlling its proxies as well. We released a synthetic, controlled trust-isolating benchmark and reported an inversion: a trust-blind model wins on the leaky split and is at chance on the corrected one, while a trust-aware model wins only when the evaluation no longer leaks. These results hold under single-evidence, single evidence-type, single-category conditions; the same isolation method should be applied to the evidence-type and inference-strength axes before the broader epistemic confidence framing can be claimed.
 
-\section*{Acknowledgments}
-The authors thank Togo AI Labs for mentorship and computational resources for this research.
-
 \begin{thebibliography}{99}
 \bibitem{schuster2019debias} T. Schuster \textit{et al.}, ``Towards debiasing fact verification models,'' in \textit{EMNLP-IJCNLP}, 2019.
 \bibitem{popat2018declare} K. Popat \textit{et al.}, ``DeClarE: Debunking fake news and false claims using evidence-aware deep learning,'' in \textit{EMNLP}, 2018.
