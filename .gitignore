@@ -1,3 +1,29 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Python environments
+.venv/
+venv/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.out
+*.bbl
+*.blg
+
+# Generated large files (reproducible from scripts)
+data/embed_cache.pkl
+
+# Model checkpoints and run artifacts (large, regenerable via just eval)
+runs/
+
+# Review working directory
+review/
+
+# Verification current-state files (never committed — generated during validation)
+verification/**/current.json

@@ -1,0 +1,15 @@
+[project]
+name = "epistemic-factkg-benchmark"
+version = "3.0.0"
+description = "Source-trust-isolating benchmark for fact verification"
+requires-python = ">=3.10"
+dependencies = [
+    "scikit-learn",
+    "sentence-transformers",
+    "numpy",
+    "matplotlib",
+]
+
+[project.urls]
+"System repo" = "https://github.com/karkid/epistemic-factkg"
+"Benchmark repo" = "https://github.com/AISWARYA-NANDAKUMAR/epistemic-factkg-benchmark"

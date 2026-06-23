@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>When "Shortcut-Breaking" Splits Leak — Togo AI Labs</title>
+<title>Beyond Binary Trust — Epistemic Fact Verification Benchmark</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -23,27 +23,49 @@
 <!-- HERO -->
 <header class="grad border-b border-slate-100">
   <div class="max-w-5xl mx-auto px-6 pt-16 pb-12">
-    <div class="flex justify-center gap-2 mb-5 text-xs font-medium">
+    <div class="flex justify-center gap-2 mb-5 text-xs font-medium flex-wrap">
       <span class="chip px-3 py-1 text-indigo-700 bg-indigo-50">Fact Verification</span>
       <span class="chip px-3 py-1 text-rose-700 bg-rose-50">Benchmark Leakage</span>
+      <span class="chip px-3 py-1 text-violet-700 bg-violet-50">Epistemic Reasoning</span>
       <span class="chip px-3 py-1 text-slate-600">Workshop preprint</span>
     </div>
     <h1 class="text-3xl sm:text-4xl md:text-5xl font-700 text-center leading-tight text-slate-900">
-      When &ldquo;Shortcut-Breaking&rdquo; Splits Leak
+      Beyond Binary Trust
     </h1>
     <p class="display text-center text-lg sm:text-xl mt-3 text-indigo-700 font-600">
-      A Source-Trust-Isolating Benchmark for Fact Verification
+      A Source-Trust-Isolating Benchmark for Continuous Epistemic Reasoning in Fact Verification
     </p>
-    <p class="text-center mt-5 text-slate-600">
-      Dheeraj Karki &nbsp;·&nbsp; Aiswarya Konavoor
-    </p>
-    <p class="text-center text-sm text-slate-500">
-      Togo AI Labs &nbsp;·&nbsp; <a class="text-indigo-600 hover:underline" href="mailto:aiswarya@togolabs.ai">aiswarya@togolabs.ai</a>
-    </p>
+    <div class="mt-5 flex flex-wrap justify-center gap-x-10 gap-y-3 text-center">
+      <div>
+        <p class="text-slate-700 font-600">Dheeraj Karki</p>
+        <p class="text-sm text-slate-500">Independent Researcher</p>
+        <p class="text-sm">
+          <a class="text-indigo-600 hover:underline" href="mailto:dheerajkarki1790@gmail.com">dheerajkarki1790@gmail.com</a>
+          &nbsp;·&nbsp;
+          <a class="text-indigo-600 hover:underline" href="https://orcid.org/0009-0008-7095-894X" target="_blank" rel="noopener">ORCID</a>
+        </p>
+      </div>
+      <div>
+        <p class="text-slate-700 font-600">Aiswarya Konavoor</p>
+        <p class="text-sm text-slate-500">Togo AI Labs</p>
+        <p class="text-sm">
+          <a class="text-indigo-600 hover:underline" href="mailto:aiswarya@togolabs.ai">aiswarya@togolabs.ai</a>
+        </p>
+      </div>
+    </div>
     <div class="flex flex-wrap justify-center gap-3 mt-7">
       <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white font-600 text-sm" href="paper.pdf">📄 Paper (PDF)</a>
+      <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-600 text-sm" href="https://github.com/karkid/epistemic-factkg" target="_blank" rel="noopener">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        System
+      </a>
+      <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-600 text-sm" href="https://github.com/AISWARYA-NANDAKUMAR/epistemic-factkg-benchmark" target="_blank" rel="noopener">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        Benchmark
+      </a>
       <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-600 text-sm" href="#benchmark">🧪 Benchmark</a>
       <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-600 text-sm" href="#inversion">📊 The Inversion</a>
+      <a class="btn inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-600 text-sm" href="#architecture">🏗 Architecture</a>
     </div>
   </div>
 </header>
@@ -51,7 +73,7 @@
 <main class="max-w-5xl mx-auto px-6">
 
   <!-- HEADLINE STATS -->
-  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 -mt-6 mb-14">
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -mt-6 mb-14">
     <div class="card p-6 text-center">
       <div class="text-3xl font-800 text-rose-600 display">0.99</div>
       <p class="text-sm text-slate-600 mt-1">a single template field predicts the verdict on the original &ldquo;shortcut-breaking&rdquo; split</p>
@@ -61,8 +83,12 @@
       <p class="text-sm text-slate-600 mt-1">accuracy of a <b>trust-blind</b> model on the leaky split &mdash; it <b>wins</b></p>
     </div>
     <div class="card p-6 text-center">
-      <div class="text-3xl font-800 text-indigo-600 display">0.44 &rarr; 0.77</div>
-      <p class="text-sm text-slate-600 mt-1">macro-F1, trust-blind &rarr; trust-aware, once the split stops leaking</p>
+      <div class="text-3xl font-800 text-indigo-600 display"><span data-num="BaselineMF">0.385</span> &rarr; <span data-num="VtwoMF">0.918</span></div>
+      <p class="text-sm text-slate-600 mt-1">macro-F1, trust-blind &rarr; trust-aware (v2-HGNN, 3 runs), once the split stops leaking</p>
+    </div>
+    <div class="card p-6 text-center">
+      <div class="text-3xl font-800 text-amber-600 display"><span data-num="MidTierMF">0.204</span></div>
+      <p class="text-sm text-slate-600 mt-1">macro-F1 of a <b>trust-aware</b> probe on mid-tier boundary records &mdash; scalar access alone is insufficient</p>
     </div>
   </section>
 
@@ -74,9 +100,11 @@
       A sensible fix is to weight evidence by how trustworthy its <i>source</i> is. But to claim a model actually uses source trust,
       you need a test that only a trust-using model can pass. We show that the obvious way to build such a test &mdash; pairing the
       same claim with a high-trust and a low-trust source &mdash; <b>secretly leaks the answer</b>: the low-trust evidence was written
-      in a different style, so a model can read the style instead of the source. After fixing the leak, the result flips: a model that
-      ignores source trust drops to chance, while a trust-aware model wins. The lesson is about measurement, not just models &mdash;
-      and it took two attempts to get the benchmark right.
+      in a different style, so a model can read the style instead of the source. We construct a <b>synthetic, controlled</b> benchmark
+      using fictional claims and byte-identical evidence text, fixing this leak. After fixing, the result flips: a model that
+      ignores source trust drops to near-chance (macro-F1 <span data-num="BaselineMF">0.385</span>), while a trust-aware model wins (<span data-num="VtwoMF">0.918</span>). Mid-tier boundary probes further
+      reveal that <b>access to the trust scalar alone is not enough</b> &mdash; trust must be reasoned over <i>continuously</i>,
+      not merely thresholded.
     </div>
   </section>
 
@@ -91,7 +119,7 @@
       </div>
       <div class="card p-5">
         <div class="text-xs font-600 text-rose-600 uppercase tracking-wide">AVeriTeC accuracy</div>
-        <p class="text-sm text-slate-700 mt-2">The set is ~66% &ldquo;refuted&rdquo;. Reported accuracy <b>0.665</b> is the majority-class prior; its <b>macro-F1 is 0.265</b>. A real classifier collapses to the majority class (predicts NEI 1 / 462 times).</p>
+        <p class="text-sm text-slate-700 mt-2">The set is ~66% &ldquo;refuted&rdquo;. Reported accuracy <b>0.665</b> is the majority-class prior; its <b>macro-F1 is 0.265</b>. A real classifier collapses to the majority class.</p>
       </div>
       <div class="card p-5">
         <div class="text-xs font-600 text-rose-600 uppercase tracking-wide">Simulation split</div>
@@ -99,8 +127,29 @@
       </div>
     </div>
     <figure class="card p-5 mt-6">
-      <img src="figures/fig_leakage.png" alt="Per-feature leakage" class="w-full max-w-2xl mx-auto"/>
-      <figcaption class="text-sm text-slate-500 mt-3 text-center">On the original split a non-trust feature predicts the verdict; on the corrected split every non-trust feature sits at chance.</figcaption>
+      <img src="figures/pb_leakage.png" alt="Per-feature leakage" class="w-full max-w-2xl mx-auto"/>
+      <figcaption class="text-sm text-slate-500 mt-3 text-center">On the original split, template field (0.99), source category (0.82), evidence text (0.92), and stance (0.54) all leak the verdict. On the corrected split, template field is removed and the remaining non-trust features drop to chance (0.50).</figcaption>
+    </figure>
+  </section>
+
+  <!-- EC FORMULA -->
+  <section class="mb-14">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">The Epistemic Confidence formula</h2>
+    <div class="card p-6 text-[15px] leading-relaxed text-slate-700 mb-5">
+      <p class="font-mono text-center text-lg text-slate-900 mb-4">EC = 1 &minus; (1 &minus; ST)<sup>EW &times; IS</sup></p>
+      <div class="grid md:grid-cols-3 gap-4 text-sm">
+        <div><b>ST</b> &mdash; source trust &isin; [0,1]: registry-assigned reliability of the source</div>
+        <div><b>EW</b> &mdash; evidence weight: perception 0.95, testimony 0.80, inference 0.55</div>
+        <div><b>IS</b> &mdash; inference strength &isin; [0,1]: logical binding of evidence to claim</div>
+      </div>
+      <p class="mt-4 text-sm"><b>Benchmark label rule:</b> <b>EC &ge; 0.75</b> &rarr; SUPPORTED or REFUTED (depending on stance); else NOT_ENOUGH_EVIDENCE.
+      High-trust sources (ST &ge; 0.85) clear the threshold; low-trust (ST &le; 0.45) fall well below it;
+      mid-tier probes (ST &isin; {0.50, 0.62, 0.72}) sit in the gap &mdash; all below 0.75, all labelled NEE.
+      <span class="text-slate-500">(The trained model uses a HybridVerdictHead when EC &lt; 0.75 &mdash; see model description below.)</span></p>
+    </div>
+    <figure class="card p-5">
+      <img src="figures/pb_ec_curve.png" alt="EC formula curve" class="w-full max-w-2xl mx-auto"/>
+      <figcaption class="text-sm text-slate-500 mt-3 text-center">EC as a function of source trust for the three evidence-type weights. The decision threshold (0.75) is marked in red. Coloured dots show the benchmark tier values.</figcaption>
     </figure>
   </section>
 
@@ -109,21 +158,22 @@
     <h2 class="text-2xl font-700 text-slate-900 mb-3">A trust-isolating benchmark</h2>
     <p class="text-slate-600 mb-5">We rebuild the test so source trust is the <i>only</i> feature that can determine the label.</p>
     <figure class="card p-5 mb-6">
-      <img src="figures/fig_construction.png" alt="Benchmark construction" class="w-full max-w-2xl mx-auto"/>
+      <img src="figures/pb_construction.png" alt="Benchmark construction" class="w-full max-w-2xl mx-auto"/>
       <figcaption class="text-sm text-slate-500 mt-3 text-center">The same evidence text is attached to a high-trust and a low-trust source of the same category; only the trust scalar differs.</figcaption>
     </figure>
     <div class="grid md:grid-cols-2 gap-4">
       <div class="card p-5">
-        <div class="text-xs font-600 text-indigo-600 uppercase tracking-wide">Design</div>
+        <div class="text-xs font-600 text-indigo-600 uppercase tracking-wide">Design (2,200 records)</div>
         <ul class="text-sm text-slate-700 mt-2 space-y-1.5 list-disc list-inside">
           <li>Evidence text <b>byte-identical</b> across trust tiers, neutral register.</li>
-          <li>Source <b>category held constant</b> (so the category feature carries no signal).</li>
-          <li><b>Trust values held out</b> at test, so the model must use trust as a continuous signal.</li>
+          <li>Source <b>category held constant</b> (category carries no signal).</li>
+          <li><b>Trust values held out</b> at test: model must reason over a continuous scalar.</li>
+          <li><b>Mid-tier probes</b> (ST &isin; {0.50, 0.62, 0.72}) test whether the model can generalise beyond binary thresholding.</li>
         </ul>
       </div>
       <div class="card p-5">
-        <div class="text-xs font-600 text-indigo-600 uppercase tracking-wide">The lesson (it took two tries)</div>
-        <p class="text-sm text-slate-700 mt-2">Text isolation alone was <b>not enough</b>: a first version still let a trust-blind model reach <b>0.82</b> macro-F1 by using source <i>category</i> as a trust proxy. Isolating a feature means controlling its proxies too. Verification: 747/747 texts appear with more than one label; every non-trust feature predicts at chance.</p>
+        <div class="text-xs font-600 text-indigo-600 uppercase tracking-wide">Verification</div>
+        <p class="text-sm text-slate-700 mt-2">1028 of 1068 distinct evidence texts appear with more than one gold label (the 40 exceptions are mid-tier boundary probes, NEE-only by design). Source category, stance, and evidence text all predict the verdict at chance (0.50). Source trust is the <b>only</b> predictive signal.</p>
       </div>
     </div>
   </section>
@@ -133,46 +183,113 @@
     <h2 class="text-2xl font-700 text-slate-900 mb-3">The inversion</h2>
     <p class="text-slate-600 mb-5">Source trust helps <i>only</i> once the split stops leaking. The same signal flips from winning to losing.</p>
     <figure class="card p-5 mb-6">
-      <img src="figures/fig_inversion.png" alt="The inversion" class="w-full max-w-3xl mx-auto"/>
+      <img src="figures/pb_inversion.png" alt="The inversion" class="w-full max-w-3xl mx-auto"/>
     </figure>
     <div class="card overflow-hidden">
       <table class="w-full text-sm">
         <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
-          <tr><th class="text-left px-5 py-3">Setting</th><th class="px-5 py-3">Metric</th><th class="px-5 py-3">Trust-blind</th><th class="px-5 py-3">Trust-aware</th></tr>
+          <tr>
+            <th class="text-left px-5 py-3">Setting</th>
+            <th class="px-4 py-3">Metric</th>
+            <th class="px-4 py-3">Trust-blind</th>
+            <th class="px-4 py-3">Trust-aware</th>
+            <th class="px-4 py-3">v3-NLI</th>
+          </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr><td class="px-5 py-3 text-slate-700">Original split (leaky)</td><td class="px-5 py-3 text-center text-slate-500">accuracy</td><td class="px-5 py-3 text-center font-700 text-rose-600">0.996</td><td class="px-5 py-3 text-center text-slate-700">0.889</td></tr>
-          <tr><td class="px-5 py-3 text-slate-700">Corrected &mdash; controlled probe</td><td class="px-5 py-3 text-center text-slate-500">macro-F1</td><td class="px-5 py-3 text-center text-slate-700">0.447</td><td class="px-5 py-3 text-center font-700 text-indigo-600">1.000</td></tr>
-          <tr><td class="px-5 py-3 text-slate-700">Corrected &mdash; real graph network</td><td class="px-5 py-3 text-center text-slate-500">macro-F1</td><td class="px-5 py-3 text-center text-slate-700">0.444</td><td class="px-5 py-3 text-center font-700 text-indigo-600">0.772</td></tr>
+          <tr>
+            <td class="px-5 py-3 text-slate-700">Original split (leaky)</td>
+            <td class="px-4 py-3 text-center text-slate-500">accuracy ↑</td>
+            <td class="px-4 py-3 text-center font-700 text-rose-600">0.996</td>
+            <td class="px-4 py-3 text-center text-slate-700">0.889</td>
+            <td class="px-4 py-3 text-center text-slate-400">—</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-slate-700">Always-NEE floor</td>
+            <td class="px-4 py-3 text-center text-slate-500">macro-F1</td>
+            <td class="px-4 py-3 text-center text-slate-700"><span data-num="AlwaysNEEMF">0.250</span></td>
+            <td class="px-4 py-3 text-center text-slate-400">—</td>
+            <td class="px-4 py-3 text-center text-slate-400">—</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-slate-700">Corrected — LogReg probe</td>
+            <td class="px-4 py-3 text-center text-slate-500">macro-F1 ↑</td>
+            <td class="px-4 py-3 text-center text-slate-700"><span data-num="LogBlindMF">0.389</span></td>
+            <td class="px-4 py-3 text-center font-700 text-indigo-600"><span data-num="LogAwareMF">0.882</span></td>
+            <td class="px-4 py-3 text-center text-slate-400">—</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-slate-700">Corrected — GNN (3 runs)</td>
+            <td class="px-4 py-3 text-center text-slate-500">macro-F1 ↑</td>
+            <td class="px-4 py-3 text-center text-slate-700"><span data-num="BaselineMF">0.385</span> ± <span data-num="BaselineStd">0.007</span></td>
+            <td class="px-4 py-3 text-center font-700 text-indigo-600"><span data-num="VtwoMF">0.918</span> ± <span data-num="VtwoStd">0.017</span></td>
+            <td class="px-4 py-3 text-center text-slate-700"><span data-num="VthreeMF">0.907</span> ± <span data-num="VthreeStd">0.019</span></td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 text-slate-700">Mid-tier probes (LogReg)</td>
+            <td class="px-4 py-3 text-center text-slate-500">macro-F1 ↑</td>
+            <td class="px-4 py-3 text-center text-slate-700"><span data-num="MidTierBlindMF">0.016</span></td>
+            <td class="px-4 py-3 text-center font-700 text-amber-600"><span data-num="MidTierMF">0.204</span></td>
+            <td class="px-4 py-3 text-center text-slate-400">—</td>
+          </tr>
         </tbody>
       </table>
     </div>
-    <p class="text-sm text-slate-500 mt-3">On the leaky split a trust-blind model wins; on the corrected split it collapses to chance while a trust-aware model wins, with both a controlled probe and the original graph network.</p>
+    <p class="text-sm text-slate-500 mt-3">GNN rows report mean ± std across three independent training runs. Mid-tier probes show that even with access to the trust scalar, a linear model cannot generalise to intermediate trust values &mdash; trust must be reasoned over continuously.</p>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture" class="mb-14 scroll-mt-6">
+    <h2 class="text-2xl font-700 text-slate-900 mb-3">Model architecture comparison</h2>
+    <p class="text-slate-600 mb-5">Three variants share the same graph backbone; the EC decision layer is the key structural difference.</p>
+    <figure class="card p-5">
+      <img src="figures/pb_architecture.png" alt="Architecture comparison" class="w-full mx-auto"/>
+      <figcaption class="text-sm text-slate-500 mt-3 text-center">
+        <b>Baseline</b>: no EC layer, trust-blind.&ensp;
+        <b>v2-HGNN</b>: EC decision diamond (aggregated EC score &ge; 0.75 &rarr; Symbolic verdict; else HybridVerdictHead — learned head trained on all three classes, not automatic NEE).&ensp;
+        <b>v3-NLI</b>: same as v2-HGNN + 3d DeBERTa NLI probs as input features. NLI probabilities are a natural estimator for inference strength (IS) — how strongly evidence text binds to the claim — but this benchmark fixes IS=1.0 for all records, so NLI has no IS axis to contribute to. Instead, DeBERTa assigns near-perfect entailment or contradiction for both high-trust and low-trust records (text is byte-identical), giving the encoder identical NLI features for records with opposite labels — a contradictory training signal that raises variance and hurts the VerdictHead fallback path.
+      </figcaption>
+    </figure>
   </section>
 
   <!-- LIMITATIONS -->
   <section class="mb-14">
     <h2 class="text-2xl font-700 text-slate-900 mb-3">Honest limitations</h2>
     <div class="card p-6 text-[15px] leading-relaxed text-slate-700">
-      The corrected benchmark is a <b>controlled instrument</b>: single-evidence, single evidence-type, fictional-claim, single-category by design, so it measures trust sensitivity, not open-web realism. The trust-aware probe score of 1.000 reflects a label that is a deterministic function of trust on this split; the content is the <b>contrast</b> with the trust-blind 0.447, not the absolute number. Results are a single run (multiple seeds belong in a camera-ready). The orthogonal evidence-type axis is held fixed here and remains untested &mdash; an analogous evidence-type-isolating benchmark is the natural next step.
+      The corrected benchmark is a <b>synthetic, controlled instrument</b>: single-evidence, single evidence-type (testimony),
+      single source-category (news media), and built from synthetic fictional claims — by design, so it measures trust sensitivity, not open-web realism.
+      GNN results report mean&thinsp;±&thinsp;std across three independent training runs; v2-HGNN and v3-NLI show similar variance
+      (&sigma;&thinsp;=&thinsp;<span data-num="VtwoStd">0.017</span> and &sigma;&thinsp;=&thinsp;<span data-num="VthreeStd">0.019</span> respectively),
+      with v3-NLI's slight instability attributable to competing NLI signals on template text. A decision-path breakdown confirms the EC symbolic path is identical and perfect for both models (40% of test decisions, 100% accuracy); the gap localises entirely to the HybridVerdictHead fallback, where v3-NLI achieves <span data-num="VthreeVHAcc">0.852</span> accuracy vs <span data-num="VtwoVHAcc">0.870</span> for v2-HGNN — all errors are <b>supported</b> or <b>refuted</b> predictions on records that should be NEE.
+      The mid-tier boundary zone (macro-F1 <span data-num="MidTierMF">0.204</span>)
+      reveals a gap in continuous trust reasoning that warrants a purpose-built model. Both EW (testimony, 0.80)
+      and IS (inference strength, 1.0 &mdash; all evidence directly states the claim) are held constant; neither
+      axis is tested here. An evidence-type-isolating benchmark (varying EW) and an inference-strength-isolating
+      benchmark (varying IS through indirect or partial evidence) are the natural next steps. The IS axis also
+      suggests a rehabilitation path for v3-NLI: NLI probabilities are appropriate IS estimators and may
+      improve over v2-HGNN in a benchmark where IS genuinely varies.
     </div>
   </section>
 
   <!-- BIBTEX -->
   <section class="mb-16">
     <h2 class="text-2xl font-700 text-slate-900 mb-3">Cite</h2>
-    <pre class="mono text-xs bg-slate-900 text-slate-100 rounded-xl p-5 overflow-x-auto">@misc{karki2026shortcut,
-  title  = {When "Shortcut-Breaking" Splits Leak: A Source-Trust-Isolating
-            Benchmark for Fact Verification},
+    <pre class="mono text-xs bg-slate-900 text-slate-100 rounded-xl p-5 overflow-x-auto">@misc{karki2026beyondbinary,
+  title  = {Beyond Binary Trust: A Source-Trust-Isolating Benchmark for
+            Continuous Epistemic Reasoning in Fact Verification},
   author = {Karki, Dheeraj and Konavoor, Aiswarya},
   year   = {2026},
-  note   = {Togo AI Labs}
+  note   = {Independent Researcher; Togo AI Labs}
 }</pre>
   </section>
 </main>
 
 <footer class="border-t border-slate-100 py-8">
-  <p class="text-center text-sm text-slate-400">Togo AI Labs &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; <a href="mailto:aiswarya@togolabs.ai" class="hover:underline">aiswarya@togolabs.ai</a></p>
+  <p class="text-center text-sm text-slate-400">
+    Dheeraj Karki &nbsp;·&nbsp; Aiswarya Konavoor &nbsp;·&nbsp; 2026
+    &nbsp;·&nbsp;
+    <a href="mailto:dheerajkarki1790@gmail.com" class="hover:underline">dheerajkarki1790@gmail.com</a>
+  </p>
 </footer>
 
 </body>

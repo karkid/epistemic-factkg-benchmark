@@ -1,0 +1,34 @@
+{
+  "d1_averitec": {
+    "n_total": 500,
+    "n_3class": 462,
+    "class_counts": {
+      "Refuted": 305,
+      "Supported": 122,
+      "Not Enough Evidence": 35
+    },
+    "majority_class": "Refuted",
+    "majority_acc": 0.6602,
+    "majority_mf1": 0.2651
+  },
+  "d2_synthetic": {
+    "n": 2500,
+    "n_template_types": 14,
+    "n_source_ids": 6,
+    "template_type_acc": 0.99,
+    "source_id_acc": 0.82,
+    "stance_acc": 0.54
+  },
+  "d3_ai2thor": {
+    "n": 1800,
+    "class_counts": {
+      "supported": 900,
+      "refuted": 900
+    },
+    "source_ids": [
+      "sensor_perception"
+    ],
+    "majority_acc": 0.5,
+    "nee_count": 0
+  }
+}
