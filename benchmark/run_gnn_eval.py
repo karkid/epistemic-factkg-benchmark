@@ -141,6 +141,7 @@ def run_model(model: str, run_id: int, main_repo: Path) -> dict:
             "uv", "run", "python", "-m", "src.pipeline.model.train",
             "--jsonl",          str(SPLIT_JSONL),
             "--model",          model,
+            "--model-name",     run_name,
             "--registry",       str(REGISTRY_OUT),
             "--splits-dir",     str(SPLITS_DIR),
             "--checkpoint-dir", str(ckpt_dir),
@@ -189,8 +190,14 @@ def save_result(model: str, run_id: int, metrics: dict) -> dict:
             cls: v.get("f1") for cls, v in metrics.get("per_class", {}).items()
         },
     }
-    with open(RESULTS_OUT, "a") as f:
-        f.write(json.dumps(entry) + "\n")
+    existing = []
+    if RESULTS_OUT.exists():
+        existing = [json.loads(l) for l in open(RESULTS_OUT) if l.strip()]
+    existing = [e for e in existing if e.get("exp_id") != entry["exp_id"]]
+    existing.append(entry)
+    with open(RESULTS_OUT, "w") as f:
+        for e in existing:
+            f.write(json.dumps(e) + "\n")
     print(f"\n  → saved: acc={entry['accuracy']:.4f}  macro_f1={entry['macro_f1']:.4f}")
     return entry
 

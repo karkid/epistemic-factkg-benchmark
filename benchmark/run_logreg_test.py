@@ -108,7 +108,7 @@ print(f"  mid-tier probe (trust-aware): macro-F1={res_aware['mid_tier']['macro_f
 
 output = {
     "benchmark_version": "expanded_v3",
-    "split_file": str(SPLIT),
+    "split_file": str(SPLIT.relative_to(ROOT)),
     "n_train": int(tr.sum()),
     "n_test_total": int(te.sum()),
     "n_test_standard": int(te_std.sum()),

@@ -17,11 +17,29 @@ just results    # aggregate results → summary.md + numbers.tex
 just figures    # regenerate paper figures
 just report     # results + figures in one step
 just pdf        # compile paper PDF (requires LaTeX)
-just all        # full pipeline: data → probe → eval → results → figures → pdf
-just clean-runs # clear runs/ and gnn_results.jsonl before a fresh just all
-just validate   # verify all numbers match committed references (no reruns needed)
+just all        # full rerun: data → probe → eval → results (stops here)
+just paper      # regenerate figures + compile PDF (run after just all once results look correct)
+just clean-checkpoints  # clear runs/ so next eval retrains from scratch
+just clean-runs         # clear runs/ AND wipe gnn_results.jsonl (full wipe)
+just validate   # verify paper numbers match committed references (no reruns needed)
 just generate-refs  # regenerate reference snapshots after intentional result changes
 ```
+
+> **`just validate` vs `just all` — two different questions:**
+>
+> - `just validate` answers: *"Are the paper numbers consistent with the committed result files?"*
+>   Run this on the unmodified repo. It requires no GPU and always passes on the committed state.
+>
+> - `just all` answers: *"Can I reproduce similar results on my hardware?"*
+>   This reruns all experiments from scratch. Results will be numerically close to the paper
+>   but not bit-exact across platforms due to GPU floating-point non-determinism (e.g. CUDA
+>   vs CPU, cuDNN version differences). After `just all`, `just validate` will fail against
+>   the committed reference — this is expected, not a bug.
+>
+> **Do not run `just all` before `just validate`** if your goal is to verify the paper.
+> If you rerun experiments and want validation to pass on your platform, run
+> `just generate-refs` after `just all` to update the references to your results — but note
+> this updates the reference, not the paper numbers.
 
 ---
 
@@ -85,7 +103,7 @@ mid-tier probe (trust-aware): macro-F1=0.204
 
 ## Step 3 — GNN evaluation (9 runs: 3 models × 3 runs)
 
-Run from the repo root. Results are appended to `results/gnn_results.jsonl` — safe to interrupt and resume.
+Run from the repo root. Each run replaces its existing entry in `results/gnn_results.jsonl` — safe to interrupt and resume without creating duplicates.
 
 ```bash
 just eval
@@ -93,15 +111,12 @@ just eval
 ```
 
 **Note:** Each run takes ~10 minutes. Completed checkpoints are cached under `runs/` —
-re-running a finished run skips training and loads existing metrics.
-
-> **Important — avoid duplicate results:** `gnn_results.jsonl` is append-only. If you re-run
-> `just eval` without clearing first, results will be duplicated and aggregated incorrectly.
-> Always run `just clean-runs` before a fresh `just all`:
-> ```bash
-> just clean-runs   # removes runs/ and clears gnn_results.jsonl
-> just all          # clean full pipeline run
-> ```
+re-running a finished run skips training and loads existing metrics. To force full
+retraining from scratch, clear checkpoints first:
+```bash
+just clean-checkpoints   # removes runs/ only, leaves result files intact
+just eval                # retrains all 9 runs fresh
+```
 
 ---
 
@@ -150,8 +165,9 @@ just generate-refs   # updates verification/*/reference.json — commit after ru
 | v2-HGNN (EC layer) | 0.918 ± 0.017 | — |
 | v3-NLI (EC + NLI) | 0.907 ± 0.019 | — |
 
-Results are reproducible across fresh runs — seeded with seeds 43, 44, 45 per run number.
-Run `just clean-runs && just all` to reproduce from scratch.
+Results are seeded (seeds 43, 44, 45 per run). Values are numerically close but not
+bit-exact across platforms (CPU vs CUDA, different BLAS libraries). The committed results
+above were obtained on macOS/CPU. Run `just all` to reproduce on your hardware.
 
 **Key finding:** Trust-blind models (baseline GNN, LogReg without ST) collapse to NEE F1 ≈ 0.
 Models with EC layer and correct threshold (0.75) correctly classify NEE for low-trust sources.
@@ -163,7 +179,7 @@ creating a competing signal that the EC layer must overcome.
 ## File layout
 
 ```
-├── Justfile                    ← just probe / eval / results / validate / pdf / all
+├── Justfile                    ← just probe / eval / results / validate / all / paper / pdf
 ├── INSTRUCTIONS.md             ← this file
 ├── benchmark/
 │   ├── build_expanded_split.py ← data generator (seed 20260611)

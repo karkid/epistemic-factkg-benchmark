@@ -1,6 +1,6 @@
 {
   "benchmark_version": "expanded_v3",
-  "split_file": "/Users/Frido/Workspace/Projects/github/epistemic-factkg/temp/data/expanded_split.jsonl",
+  "split_file": "data/expanded_split.jsonl",
   "n_train": 1600,
   "n_test_total": 600,
   "n_test_standard": 480,

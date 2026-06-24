@@ -10,6 +10,18 @@ dependencies = [
     "matplotlib",
 ]
 
+[project.optional-dependencies]
+pdf = [
+    "pylatexenc",    # LaTeX string parsing and encoding utilities
+    "Pillow",        # Image processing for figures embedded in PDF
+    "pypdf",         # PDF reading/merging/inspection
+]
+
 [project.urls]
 "System repo" = "https://github.com/karkid/epistemic-factkg"
 "Benchmark repo" = "https://github.com/AISWARYA-NANDAKUMAR/epistemic-factkg-benchmark"
+
+[tool.uv]
+# PDF compilation requires latexmk + a LaTeX distribution (TeX Live / MacTeX).
+# Install Python PDF utils with: uv sync --extra pdf
+# Then compile: just pdf

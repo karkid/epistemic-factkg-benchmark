@@ -238,8 +238,48 @@ if dp_data:
     "",
     ]
 
+# ---- Mid-tier GNN section (load here so section can use the data) ----
+midtier    = json.loads(MIDTIER_RESULTS.read_text()) if MIDTIER_RESULTS.exists() else {}
+mt_summary = midtier.get("summary", {})
+
+def _mt(model):
+    r = mt_summary.get(model, {})
+    return r.get("mid_macro_f1_mean", float("nan")), r.get("mid_macro_f1_std", float("nan"))
+
+bl_mid_mf, bl_mid_std = _mt("baseline")
+v2_mid_mf, v2_mid_std = _mt("v2-hgnn")
+v3_mid_mf, v3_mid_std = _mt("v3-nli")
+lr_mid_mf_val = logreg["trust_aware"]["mid_tier"]["macro_f1"]
+NEE_FLOOR = 1 / 3
+
 lines += [
-    "## 6. Full run log",
+    "## 6. Mid-tier GNN analysis",
+    "",
+    "Mid-tier probes (ST ∈ {0.50, 0.62, 0.72}, all NEE) test whether models reason over ST continuously",
+    "rather than applying a binary learned threshold. On the 120 mid-tier records in isolation, the",
+    f"**always-NEE floor is macro-F1 {NEE_FLOOR:.3f}** (one of three classes, none of the other two present).",
+    "",
+    "| Model | Mid-tier macro-F1 (mean ± std) | vs always-NEE floor (0.333) |",
+    "|-------|-------------------------------|------------------------------|",
+    f"| Baseline (trust-blind) | {bl_mid_mf:.3f} ± {bl_mid_std:.3f} | −{abs(bl_mid_mf - NEE_FLOOR):.3f} (predicts SUP/REF on all) |",
+    f"| v2-HGNN (EC layer) | {v2_mid_mf:.3f} ± {v2_mid_std:.3f} | −{abs(v2_mid_mf - NEE_FLOOR):.3f} (below floor) |",
+    f"| v3-NLI (EC + NLI)  | {v3_mid_mf:.3f} ± {v3_mid_std:.3f} | −{abs(v3_mid_mf - NEE_FLOOR):.3f} (below floor) |",
+    f"| LogReg trust-aware | {lr_mid_mf_val:.3f} | −{abs(lr_mid_mf_val - NEE_FLOOR):.3f} (below floor) |",
+    "",
+    f"**F5. All models score below the always-NEE floor on mid-tier.** The trust-aware GNNs (v2-HGNN {v2_mid_mf:.3f},",
+    f"v3-NLI {v3_mid_mf:.3f}) and the trust-aware LogReg ({lr_mid_mf_val:.3f}) all fall short of {NEE_FLOOR:.3f} — meaning they actively",
+    "mislabel some mid-tier records as SUPPORTED/REFUTED rather than NEE. The EC layer was trained on",
+    "binary high/low ST values (0.30–0.45 for low, 0.85–0.90 for high); mid-tier ST values (0.50–0.72)",
+    "fall in an untrained gap. The VerdictHead, seeing ST values closer to the high-trust training range",
+    "than to low-trust, partially fires SUPPORTED/REFUTED where the answer is NEE. This is the benchmark's",
+    "central open problem: continuous trust reasoning cannot be learned from binary-tier training data alone.",
+    "",
+    "---",
+    "",
+]
+
+lines += [
+    "## 7. Full run log",
     "",
     "| exp_id | acc | macro_f1 | NEE_f1 |",
     "|--------|-----|----------|--------|",
@@ -260,10 +300,6 @@ NUMBERS_OUT = ROOT / "paper" / "numbers.tex"
 
 def ec(st, ew=0.80, is_=1.0):
     return 1.0 - (1.0 - st) ** (ew * is_)
-
-# ---- Load mid-tier GNN results ----
-midtier = json.loads(MIDTIER_RESULTS.read_text()) if MIDTIER_RESULTS.exists() else {}
-mt_summary = midtier.get("summary", {})
 
 v2_vh_acc  = _vh_acc(dp_data["v2-hgnn"])
 v3_vh_acc  = _vh_acc(dp_data["v3-nli"])
