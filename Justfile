@@ -66,6 +66,10 @@ pdf:
 pdf-clean:
     {{LATEXMK}} -C -cd {{PAPER_TEX}}
 
+[doc("Compile BlackboxNLP 2026 submission PDF (ACL format, anonymized).")]
+pdf-blackbox:
+    {{LATEXMK}} -pdf -cd submissions/blackboxnlp2026/paper.tex
+
 # ── Compound targets ──────────────────────────────────────────────────────────
 
 [doc("Regenerate figures + compile PDF (does not re-run benchmark).")]
