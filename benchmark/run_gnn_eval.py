@@ -23,6 +23,7 @@ import argparse, json, subprocess
 from pathlib import Path
 
 GITHUB_URL   = "https://github.com/karkid/epistemic-factkg"
+SYSTEM_TAG   = "v3.0-blackboxnlp2026"          # pinned snapshot used for paper results
 ROOT   = Path(__file__).resolve().parents[1]   # review/12062026/
 MODEL_REPO   = ROOT / "model_repo"             # cloned here if local not found
 SPLIT_JSONL  = ROOT / "data" / "expanded_split.jsonl"
@@ -61,9 +62,10 @@ def _find_or_clone_repo() -> Path:
         print(f"  model repo: using cached clone at {MODEL_REPO}")
         return MODEL_REPO
 
-    print(f"  model repo not found — cloning {GITHUB_URL}")
+    print(f"  model repo not found — cloning {GITHUB_URL} at tag {SYSTEM_TAG}")
     MODEL_REPO.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["git", "clone", GITHUB_URL, str(MODEL_REPO)], check=True)
+    subprocess.run(["git", "clone", "--branch", SYSTEM_TAG, "--depth", "1",
+                    GITHUB_URL, str(MODEL_REPO)], check=True)
     print("  running uv sync to install dependencies...")
     subprocess.run(["uv", "sync"], cwd=MODEL_REPO, check=True)
     print("  clone ready.")

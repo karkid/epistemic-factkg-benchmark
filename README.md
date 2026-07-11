@@ -97,7 +97,7 @@ uv run python benchmark/run_logreg_test.py    # → results/logreg_results.json
 
 **3 — GNN evaluation** (GPU recommended, ~10 min/run × 9 runs)
 ```bash
-# auto-clones https://github.com/karkid/epistemic-factkg on first use
+# auto-clones epistemic-factkg at tag v3.0-blackboxnlp2026 on first use
 for model in baseline v2-hgnn v3-nli; do
   for run in 1 2 3; do
     uv run python benchmark/run_gnn_eval.py --model $model --run $run
@@ -105,6 +105,10 @@ for model in baseline v2-hgnn v3-nli; do
 done
 uv run python analysis/aggregate.py           # → results/summary.md + paper/numbers.tex
 ```
+
+> **System repo version:** All results in this paper were produced against
+> [`epistemic-factkg` tag `v3.0-blackboxnlp2026`](https://github.com/karkid/epistemic-factkg/tree/v3.0-blackboxnlp2026).
+> The evaluation script pins this tag automatically on clone — no manual step needed.
 
 **4 — Regenerate paper figures**
 ```bash
