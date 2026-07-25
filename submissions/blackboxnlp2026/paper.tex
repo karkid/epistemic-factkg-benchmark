@@ -12,7 +12,9 @@
 \usepackage{multirow}
 \usepackage{float}
 \usepackage{url}
+\usepackage{xurl}
 \usepackage{tikz}
+\hyphenation{Hy-brid-Ver-dict-Head}
 
 \graphicspath{{figures/}}
 \input{../../paper/numbers}
@@ -75,7 +77,7 @@ Per-claim evidence is encoded by a heterogeneous graph network \citep{schlichtkr
 \label{sec:diagnosis}
 We evaluate three claims in the original setup and find each undermined by its own data. Table~\ref{tab:diagnosis} collects the numbers.
 
-\textbf{The synthetic split leaks through text register.} The synthetic ``shortcut-breaking'' split pairs claims with high- and low-trust sources and labels low-trust supporting text as not-enough-evidence, so that, in principle, only source trust can separate the pair. In practice the generator draws low-trust evidence from a rumour register (for example, ``An anonymous post claimed that\dots'') and high-trust evidence from an official register (``published findings confirming\dots''). Because the register is determined by the trust tier and the trust tier determines the verdict, the text register determines the verdict. A single-feature lookup confirms this: a per-record template field predicts the verdict at 0.99 (the field value encodes verdict, trust tier, and source identity simultaneously --- e.g., \texttt{high\_trust\_supported}, \texttt{low\_trust\_nee} --- so 13 of 14 template types are 100\% predictive), the source identifier at 0.82, and the raw evidence text and its stance at 0.92 and 0.54 respectively (Table~\ref{tab:diagnosis}, Figure~\ref{fig:leakage}). Consequently, a trust-blind model that reads only the text reaches 0.996 accuracy on this split, and the trust-aware model scores lower (0.889), because the leaky split rewards reading the register rather than reasoning about the source.
+\textbf{The synthetic split leaks through text register.} The synthetic ``shortcut-breaking'' split pairs claims with high- and low-trust sources and labels low-trust supporting text as not-enough-evidence, so that, in principle, only source trust can separate the pair. In practice the generator draws low-trust evidence from a rumour register (for example, ``An anonymous post claimed that\dots'') and high-trust evidence from an official register (``published findings confirming\dots''). Because the register is determined by the trust tier and the trust tier determines the verdict, the text register determines the verdict. A single-feature lookup confirms this: a per-record template field predicts the verdict at 0.99 (the field value encodes verdict, trust tier, and source identity simultaneously --- e.g., \texttt{high\_trust\_supported},\allowbreak\ \texttt{low\_trust\_nee} --- so 13 of 14 template types are 100\% predictive), the source identifier at 0.82, and the raw evidence text and its stance at 0.92 and 0.54 respectively (Table~\ref{tab:diagnosis}, Figure~\ref{fig:leakage}). Consequently, a trust-blind model that reads only the text reaches 0.996 accuracy on this split, and the trust-aware model scores lower (0.889), because the leaky split rewards reading the register rather than reasoning about the source.
 
 \textbf{AVeriTeC accuracy hides the class prior.} The AVeriTeC subset is heavily imbalanced. The system maps AVeriTeC's four verdict classes to three (supported, refuted, not-enough-evidence). On this development set, always predicting the majority class (refuted) yields accuracy 0.660 and macro-F1 0.265. A standard text classifier collapses onto the majority class, predicting the not-enough-evidence class exactly once out of 462 examples, for accuracy 0.656 and macro-F1 0.354. The reported system accuracy of 0.665 lies on this prior; without macro-F1 it cannot be distinguished from a majority predictor.
 
@@ -126,6 +128,7 @@ nm\_l30a (low-trust)  & 0.30 & 0.248 & {\normalfont\textsc{nee}} \\
 
 \begin{figure}[!ht]
 \centering
+\resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[font=\footnotesize, xscale=0.80]
   \draw[->] (-0.2,0) -- (8.6,0) node[right] {$\mathrm{ST}$};
   \foreach \x/\lab in {0/0.0, 1.8/0.30, 2.7/0.45, 3.15/0.50, 4.05/0.62, 4.8/0.72, 5.6/0.85, 8.3/1.0} {
@@ -143,7 +146,8 @@ nm\_l30a (low-trust)  & 0.30 & 0.248 & {\normalfont\textsc{nee}} \\
   \node[font=\tiny] at (6.95,0.24) {EC$\geq$0.781};
   \draw[dashed, red!70!black, thick] (5.4,-0.18) -- (5.4,0.82);
   \node[above, font=\tiny, red!70!black, align=center] at (5.4,0.82) {threshold\\EC\,=\,0.75};
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{Trust tiers on the benchmark. Evidence text is byte-identical across all tiers; only the ST scalar changes. The red dashed line marks the EC\,=\,0.75 decision threshold; all high-trust records (ST\,$\geq$\,0.85, EC\,$\geq$\,0.781) clear it. Mid-tier probes (EC\,$\in$\,\{0.43--0.64\}) fall below it, testing whether a model reasons continuously rather than thresholds ST into two bins.}
 \label{fig:tiers}
 \end{figure}
@@ -156,6 +160,7 @@ nm\_l30a (low-trust)  & 0.30 & 0.248 & {\normalfont\textsc{nee}} \\
 \caption{Trust-isolation verification on the corrected benchmark. A non-leaking feature predicts the verdict at the chance rate (0.50 for the high/low decision). Source trust is the only predictive signal, and it is held out by value at test.}
 \label{tab:isolation}
 \centering
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}lr@{}}
 \toprule
 Feature & verdict predictable \\
@@ -166,7 +171,8 @@ stance & 0.50 \\
 source category & 0.50 (constant) \\
 source-trust scalar & predictive (held out at test) \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \begin{figure}[!ht]
